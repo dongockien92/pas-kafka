@@ -4,8 +4,8 @@ services:
     ports:
       - '2181:2181'
       - '8902:8080' # admin server port, will be disable in production
-#    volumes:
-#      - './data/zookeeper:/bitnami/zookeeper'
+    volumes:
+      - './data/zookeeper:/bitnami/zookeeper'
     environment:
       ALLOW_ANONYMOUS_LOGIN: 1
       ZOO_PORT_NUMBER: 2181
@@ -20,8 +20,8 @@ services:
     restart: on-failure
     ports:
       - '29092:29092'
-#    volumes:
-#      - './data/kafka:/bitnami/kafka'
+    volumes:
+      - './data/kafka:/bitnami/kafka'
     environment:
       - KAFKA_BROKER_ID=1
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL_SAME_HOST:PLAINTEXT
