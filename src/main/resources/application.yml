@@ -6,12 +6,51 @@ spring:
   application:
     name: 'pas-kafka'
 
-  kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
-    producer:
-      value-serializer: 'org.springframework.kafka.support.serializer.JsonSerializer'
-    consumer:
-      value-deserializer: 'org.springframework.kafka.support.serializer.JsonDeserializer'
-      properties:
-        spring.json.trusted.packages: "com.demo.paskafka.*"
-      group-id: 'pas-kafka'
+  cloud:
+    function:
+      definition: pasProcessor;pasConsumer
+    stream:
+      kafka:
+        binder:
+          brokers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
+        bindings:
+          pasProducer-out-0:
+            producer:
+              configuration:
+                value:
+                  serializer: 'org.springframework.kafka.support.serializer.JsonSerializer'
+          pasProcessor-in-0:
+            consumer:
+              configuration:
+                value:
+                  deserializer: 'org.springframework.kafka.support.serializer.JsonDeserializer'
+          pasProcessor-out-0:
+            producer:
+              configuration:
+                value:
+                  serializer: 'org.springframework.kafka.support.serializer.JsonSerializer'
+          pasConsumer-in-0:
+            consumer:
+              configuration:
+                value:
+                  deserializer: 'org.springframework.kafka.support.serializer.JsonDeserializer'
+
+      bindings:
+        pasProducer-out-0:
+          destination: 'producer-out-0'
+          producer:
+            use-native-encoding: true # This enables using the custom serializer
+        pasProcessor-in-0:
+          destination: 'producer-out-0'
+          group: 'pas-kafka'
+          consumer:
+            use-native-decoding: true # This enables using the custom deserializer
+        pasProcessor-out-0:
+          destination: 'consumer-in-0'
+          producer:
+            use-native-encoding: true # This enables using the custom serializer
+        pasConsumer-in-0:
+          destination: 'consumer-in-0'
+          group: 'pas-kafka'
+          consumer:
+            use-native-decoding: true # This enables using the custom deserializer
