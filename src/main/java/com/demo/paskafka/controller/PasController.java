@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PasController {
     private final PasService pasService;
 
-    @PostMapping("/topic0")
+    @PostMapping("/process")
     public void send(@RequestBody PasDTO dto) {
         this.pasService.send(dto);
     }

@@ -1,34 +1,17 @@
-app:
-  topic:
-    0: ${TOPIC_0:topic-0}
+#logging:
+#  level:
+#    root: debug
 
 spring:
-  cloud:
-    function:
-      definition: consumer;producer
-    stream:
-      kafka:
-        binder:
-          brokers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
-        bindings:
-          producer-out-0:
-            producer:
-              configuration:
-                value:
-                  serializer: 'org.springframework.kafka.support.serializer.JsonSerializer'
-          consumer-in-0:
-            consumer:
-              configuration:
-                value:
-                  deserializer: 'org.springframework.kafka.support.serializer.JsonDeserializer'
+  application:
+    name: 'pas-kafka'
 
-      bindings:
-        producer-out-0:
-          destination: ${TOPIC_0:topic-0}
-          producer:
-            useNativeEncoding: true # This enables using the custom serializer
-        consumer-in-0:
-          destination: ${TOPIC_0:topic-0}
-          consumer:
-            use-native-decoding: true # This enables using the custom deserializer
-
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
+    producer:
+      value-serializer: 'org.springframework.kafka.support.serializer.JsonSerializer'
+    consumer:
+      value-deserializer: 'org.springframework.kafka.support.serializer.JsonDeserializer'
+      properties:
+        spring.json.trusted.packages: "com.demo.paskafka.*"
+      group-id: 'pas-kafka'
